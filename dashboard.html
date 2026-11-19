@@ -1,0 +1,418 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SpecSync Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 20px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #1e293b;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 22px 30px;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        header p {
+            margin-top: 8px;
+            color: #cbd5e1;
+        }
+
+        .container {
+            display: flex;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        /* Navigation Sidebar */
+        aside {
+            width: 260px;
+            min-width: 260px;
+            background: #1e293b;
+            color: white;
+            padding: 25px 15px;
+
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        aside h3 {
+            margin-bottom: 25px;
+            padding-left: 10px;
+            font-size: 22px;
+        }
+
+        aside a {
+            display: block;
+            color: #e2e8f0;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+
+        aside a:hover {
+            background: #334155;
+            color: white;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            min-width: 0;
+            padding: 30px;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h1 {
+            font-size: 36px;
+            margin-bottom: 5px;
+        }
+
+        .welcome p {
+            font-size: 18px;
+        }
+
+        /* Dashboard Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(180px, 1fr)
+            );
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px #00000010;
+        }
+
+        .card h3 {
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .card h2 {
+            font-size: 32px;
+            margin-top: 15px;
+            color: #2563eb;
+        }
+
+        /* Sections */
+        .section {
+            margin-top: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            scroll-margin-top: 20px;
+        }
+
+        .section h2 {
+            margin-bottom: 20px;
+        }
+
+        /* Forms */
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 15px;
+            font-family: Arial, sans-serif;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        /* Project Items */
+        .project-item {
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            margin-top: 15px;
+            border-radius: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .project-item h3 {
+            margin-bottom: 8px;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+            margin-top: 12px;
+        }
+
+        .delete-btn:hover {
+            background: #b91c1c;
+        }
+
+        footer {
+            margin-top: 30px;
+            padding-bottom: 20px;
+            color: #64748b;
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            aside {
+                position: relative;
+                width: 100%;
+                min-width: 100%;
+                height: auto;
+            }
+
+            aside a {
+                display: inline-block;
+                margin: 3px;
+                padding: 10px;
+            }
+
+            main {
+                width: 100%;
+                padding: 20px;
+            }
+
+            .welcome h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>SpecSync</h1>
+        <p>
+            Software Requirements Traceability and Version Management System
+        </p>
+    </header>
+
+    <div class="container">
+
+        <!-- Navigation -->
+        <aside>
+            <h3>Navigation</h3>
+            <a href="{{ url_for('home') }}">Dashboard</a>
+            <a href="{{ url_for('home') }}#projects">Projects</a>
+            <a href="{{ url_for('requirements') }}">Requirements</a>
+            <a href="{{ url_for('versions') }}">Version History</a>
+            <a href="{{ url_for('test_cases') }}">Test Cases</a>
+            <a href="{{ url_for('traceability') }}">Traceability Matrix</a>
+            <a href="{{ url_for('reports') }}">Reports</a>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+
+            <!-- Dashboard -->
+            <div class="welcome" id="dashboard">
+                <h1>Welcome to SpecSync!</h1>
+
+                <p>
+                    Manage software requirements and track changes efficiently.
+                </p>
+            </div>
+
+            <!-- Dashboard Statistics -->
+            <div class="cards">
+
+                <div class="card">
+                    <h3>Total Projects</h3>
+                    <h2>{{ total_projects }}</h2>
+                </div>
+
+                <div class="card">
+                    <h3>Total Requirements</h3>
+                    <h2>{{ total_requirements }}</h2>
+                </div>
+
+                <div class="card">
+                    <h3>Requirement Versions</h3>
+                    <h2>{{ total_versions }}</h2>
+                </div>
+
+                <div class="card">
+                    <h3>Test Cases</h3>
+                    <h2>{{ total_test_cases }}</h2>
+                </div>
+
+            </div>
+
+            <!-- Projects Management -->
+            <div class="section" id="projects">
+
+                <h2>Projects Management</h2>
+
+                <form action="{{ url_for('add_project') }}" method="POST">
+
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Enter project name"
+                        required
+                    >
+
+                    <textarea
+                        name="description"
+                        placeholder="Enter project description"
+                        rows="3"
+                    ></textarea>
+
+                    <button type="submit">
+                        Add Project
+                    </button>
+
+                </form>
+
+                <h3 style="margin-top: 25px;">
+                    Your Projects
+                </h3>
+
+                {% if projects %}
+
+                    {% for project in projects %}
+
+                        <div class="project-item">
+
+                            <h3>{{ project['name'] }}</h3>
+
+                            <p>
+                                {{ project['description'] or 'No description' }}
+                            </p>
+
+                            <form
+                                action="{{ url_for('delete_project', project_id=project['id']) }}"
+                                method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete this project?');"
+                            >
+
+                                <button type="submit" class="delete-btn">
+                                    Delete Project
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p style="margin-top: 15px;">
+                        No projects added yet. Add your first project above!
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+            <!-- Requirements -->
+            <div class="section" id="requirements">
+
+                <h2>Requirements Management</h2>
+
+                <p>
+                    Create and manage functional and non-functional requirements.
+                </p>
+
+            </div>
+
+            <!-- Version History -->
+            <div class="section" id="versions">
+
+                <h2>Version History</h2>
+
+                <p>
+                    Track changes made to software requirements.
+                </p>
+
+            </div>
+
+            <!-- Traceability Matrix -->
+            <div class="section" id="traceability">
+
+                <h2>Traceability Matrix</h2>
+
+                <p>
+                    Connect requirements with test cases.
+                </p>
+
+            </div>
+
+            <!-- Reports -->
+            <div class="section" id="reports">
+
+                <h2>Reports</h2>
+
+                <p>
+                    View requirement coverage and project reports.
+                </p>
+
+            </div>
+
+            <!-- Footer -->
+            <footer>
+                SpecSync | Software Engineering and System Design Project
+            </footer>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

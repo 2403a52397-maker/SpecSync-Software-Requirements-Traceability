@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpecSync - Reports</title>
+
+    <style>
+        body { font-family: Arial; background: #f4f6f9; margin: 0; color: #1e293b; }
+        header { background: #172554; color: white; padding: 25px 35px; }
+        main { padding: 30px; }
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 25px; border-radius: 12px; }
+        .card h2 { color: #2563eb; font-size: 32px; }
+        .section { background: white; padding: 25px; margin-top: 25px; border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; }
+        th { background: #e2e8f0; }
+        a { color: #2563eb; text-decoration: none; }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>SpecSync</h1>
+    <p>Project Reports and Requirement Coverage</p>
+</header>
+
+<main>
+    <p><a href="/">← Back to Dashboard</a></p>
+
+    <div class="cards">
+        <div class="card">
+            <h3>Total Projects</h3>
+            <h2>{{ total_projects }}</h2>
+        </div>
+
+        <div class="card">
+            <h3>Total Requirements</h3>
+            <h2>{{ total_requirements }}</h2>
+        </div>
+
+        <div class="card">
+            <h3>Total Test Cases</h3>
+            <h2>{{ total_test_cases }}</h2>
+        </div>
+
+        <div class="card">
+            <h3>Traceability Links</h3>
+            <h2>{{ total_links }}</h2>
+        </div>
+
+        <div class="card">
+            <h3>Coverage</h3>
+            <h2>{{ coverage }}%</h2>
+        </div>
+    </div>
+
+    <div class="cards" style="margin-top: 20px;">
+        <div class="card"><h3>Passed Tests</h3><h2>{{ passed_test_cases }}</h2></div>
+        <div class="card"><h3>Failed Tests</h3><h2>{{ failed_test_cases }}</h2></div>
+        <div class="card"><h3>Not Executed</h3><h2>{{ not_executed_test_cases }}</h2></div>
+    </div>
+
+    <div class="section">
+        <h2>Project-wise Report</h2>
+
+        {% if project_reports %}
+        <table>
+            <tr>
+                <th>Project</th>
+                <th>Requirements</th>
+                <th>Test Cases</th>
+                <th>Linked Requirements</th>
+                <th>Coverage</th>
+            </tr>
+
+            {% for project in project_reports %}
+            <tr>
+                <td>{{ project['name'] }}</td>
+                <td>{{ project['requirements_count'] }}</td>
+                <td>{{ project['test_cases_count'] }}</td>
+                <td>{{ project['linked_count'] }}</td>
+                <td>{{ project['coverage'] }}%</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p>No project reports available.</p>
+        {% endif %}
+    </div>
+</main>
+
+</body>
+</html>

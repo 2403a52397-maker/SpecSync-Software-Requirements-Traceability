@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpecSync - Test Cases</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 25px 35px;
+        }
+
+        main {
+            padding: 30px;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+        }
+
+        .test-item {
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            margin-top: 15px;
+            border-radius: 8px;
+        }
+
+        a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>SpecSync</h1>
+    <p>Test Case Management</p>
+</header>
+
+<main>
+
+    <p><a href="/">← Back to Dashboard</a></p>
+
+    <div class="section">
+        <h2>Add Test Case</h2>
+
+        <form action="{{ url_for('add_test_case') }}" method="POST">
+
+            <label>Select Project</label>
+
+            <select name="project_id" required>
+                <option value="">Choose a project</option>
+
+                {% for project in projects %}
+                <option value="{{ project['id'] }}">
+                    {{ project['name'] }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <input
+                type="text"
+                name="title"
+                placeholder="Test case title"
+                required
+            >
+
+            <textarea
+                name="description"
+                placeholder="Test case description"
+                rows="3"
+            ></textarea>
+
+            <textarea
+                name="expected_result"
+                placeholder="Expected result"
+                rows="3"
+            ></textarea>
+
+            <button type="submit">Add Test Case</button>
+
+        </form>
+    </div>
+
+    <div class="section">
+        <h2>All Test Cases</h2>
+
+        {% if test_cases %}
+
+            {% for test in test_cases %}
+
+            <div class="test-item">
+
+                <h3>{{ test['title'] }}</h3>
+
+                <p><strong>Project:</strong>
+                    {{ test['project_name'] }}
+                </p>
+
+                <p><strong>Description:</strong>
+                    {{ test['description'] or 'No description' }}
+                </p>
+
+                <p><strong>Expected Result:</strong>
+                    {{ test['expected_result'] or 'Not specified' }}
+                </p>
+
+                <p><strong>Status:</strong> {{ test['status'] or 'Not Executed' }}</p>
+
+                <form action="{{ url_for('update_test_case_status', test_case_id=test['id']) }}" method="POST" style="margin: 12px 0;">
+                    <label for="status-{{ test['id'] }}">Update execution status</label>
+                    <select id="status-{{ test['id'] }}" name="status" required>
+                        <option value="Not Executed" {% if test['status']=='Not Executed' %}selected{% endif %}>Not Executed</option>
+                        <option value="Pass" {% if test['status']=='Pass' %}selected{% endif %}>Pass</option>
+                        <option value="Fail" {% if test['status']=='Fail' %}selected{% endif %}>Fail</option>
+                    </select>
+                    <button type="submit">Update Status</button>
+                </form>
+
+                <form
+                    action="{{ url_for('delete_test_case', test_case_id=test['id']) }}"
+                    method="POST"
+                    onsubmit="return confirm('Delete this test case?');"
+                >
+                    <button type="submit" class="delete-btn">
+                        Delete Test Case
+                    </button>
+                </form>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>No test cases available. Add your first test case above.</p>
+
+        {% endif %}
+
+    </div>
+
+</main>
+
+</body>
+</html>
